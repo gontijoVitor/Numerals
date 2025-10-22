@@ -1,2 +1,2 @@
 # Numerals
-Esse é um projeto que ainda quero desenvolver, trata-se de um jogo como wordle/termo, onde você precisa descobrir uma palavra, recebendo dicas a cada palpite. Quero fazer essa mesma ideia só que com números de 1 a 9, para assim treinar minha habilidade com arrays.
+This is a project I still want to develop — it's a game like Wordle or Termo, where you have to guess a word, receiving hints with each attempt. I want to do the same idea but with numbers from 1 to 9, to help me practice my skills with arrays.
