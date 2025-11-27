@@ -58,18 +58,43 @@
             The typed numbers will appear here
         </div>
         
-        <input type="text" placeholder="Give it a try!">
+        <input type="text" placeholder="Give it a try!" maxlength="5" id="userInputField">
         <div>
             <button><i class="fa-solid fa-file-lines"></i> <span>How to play</span></button>
-            <button type="submit"><i class="fa-solid fa-share"></i> <span>Submit answer</span></button>
+            <button type="submit" id="submit" onclick="processInput()"><i class="fa-solid fa-share"></i> <span>Submit answer</span></button>
         </div>
+        <div id="output"></div>
+            <button onclick="reloadPage()"><i class="fa-solid fa-arrow-rotate-right"></i> <span>Try another guess</span></button>
     </div>
 </body>
 <script>
+    // Create random rumber
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
 
-    console.log(getRandomInt(99999));
+    // Creating a random number
+    const randomNumber = getRandomInt(99999);
+    
+    // Processing the user answer
+    function processInput() {
+      const userInput = document.getElementById('userInputField').value; // User input
+
+      if (userInput == randomNumber){
+        document.getElementById('output').innerHTML = `Congrats, you guessed the right number: ${userInput}`;
+        var button = document.getElementById('submit');
+        submit.disabled = true;
+      }
+      else{
+        document.getElementById('output').innerHTML = `Wrong guess, try again!`;
+      }
+    }
+
+    function reloadPage(){
+        window.location.reload(true);
+    }
+
+    // I have to remove this alert later, cuz is just for testing
+    alert(randomNumber);
 </script>
 </html>
