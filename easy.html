@@ -18,7 +18,7 @@
             align-items: center;
             justify-content: center;
             height: 80vh;
-            width: 400px;
+            width: 410px;
             margin: 60px auto;
             gap: 20px;
             font-family: Arial, sans-serif;
@@ -41,6 +41,15 @@
 
         nav a:hover {
             color: #007bff;
+        }
+
+        button {
+            margin-left: 2px;
+            margin-right: 2px;
+        }
+
+        button:hover{
+            cursor: pointer;
         }
 
         /* Dark mode styles */
@@ -77,37 +86,39 @@
 </head>
 <body>
     <div class="main">
-        <button onclick="toggleTheme()" id="themeToggle">
-            <i class="fa-solid fa-moon"></i>
-        </button>
-
         <h1 style="margin-bottom: 0;">Numerals</h1>
         <nav>
-            <a href="easy.html">Easy</a> |
+            <a href="easy.html">Easy</a> | <!-- disable this button -->
             <a href="medium.html">Medium</a> |
             <a href="difficult.html">Hard</a> |
             <a href="impossible.html">Impossible</a>
         </nav>
         
-        <div id="guessed_numbers"></div>
+        
+        <div>
+        </div>
         
         <input type="text" placeholder="Give it a try!" maxlength="5" id="userInputField">
         <div>
+            <button onclick="toggleTheme()" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
             <button onclick="rules()"><i class="fa-solid fa-file-lines"></i> <span>How to play</span></button>
             <button type="submit" id="submit" onclick="processInput()"><i class="fa-solid fa-share"></i> <span>Submit answer</span></button>
-        </div>
-        <div id="output"></div>
             <button onclick="reloadPage()"><i class="fa-solid fa-arrow-rotate-right"></i> <span>Try another guess</span></button>
+        </div>
+        <div id="guessed_numbers"></div>
+        <div id="output"></div>
     </div>
 </body>
 <script>
     // Create random rumber
-    function getRandomInt(max) {
-        return Math.floor(Math.random() * max);
+    function getRandomInt() {
+        const min = 10000;
+        const max = 99999;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     // Creating a random number
-    const randomNumber = getRandomInt(99999);
+    const randomNumber = getRandomInt();
 
     // Array that storages the guessed numbers
     const guessed_numbers = [];
@@ -122,7 +133,7 @@
             document.getElementById('output').innerHTML = `Congrats, you guessed the right number: ${userInput}`;
             
             // Disable submit button if user type the correct number
-            document.getElementById('submit').disable == true;    
+            document.getElementById('submit').disabled = true;    
         }
 
         else{
