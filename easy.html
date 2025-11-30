@@ -42,10 +42,45 @@
         nav a:hover {
             color: #007bff;
         }
+
+        /* Dark mode styles */
+        .dark-mode {
+            background-color: #121212;
+            color: #e5e5e5;
+        }
+
+        .dark-mode .main {
+            background-color: #1e1e1e;
+        }
+
+        .dark-mode nav a {
+            color: #ddd;
+        }
+
+        .dark-mode nav a:hover {
+            color: #66aaff;
+        }
+
+        .dark-mode input {
+            background-color: #2b2b2b;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        .dark-mode button {
+            background-color: #2b2b2b;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
     </style>
 </head>
 <body>
     <div class="main">
+        <button onclick="toggleTheme()" id="themeToggle">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+
         <h1 style="margin-bottom: 0;">Numerals</h1>
         <nav>
             <a href="easy.html">Easy</a> |
@@ -54,17 +89,14 @@
             <a href="impossible.html">Impossible</a>
         </nav>
         
-        <div>
-            The typed numbers will appear here
-        </div>
+        <div id="guessed_numbers"></div>
         
         <input type="text" placeholder="Give it a try!" maxlength="5" id="userInputField">
         <div>
-            <button><i class="fa-solid fa-file-lines"></i> <span>How to play</span></button>
+            <button onclick="rules()"><i class="fa-solid fa-file-lines"></i> <span>How to play</span></button>
             <button type="submit" id="submit" onclick="processInput()"><i class="fa-solid fa-share"></i> <span>Submit answer</span></button>
         </div>
         <div id="output"></div>
-        <div id="guessed_numbers"></div>
             <button onclick="reloadPage()"><i class="fa-solid fa-arrow-rotate-right"></i> <span>Try another guess</span></button>
     </div>
 </body>
@@ -102,6 +134,38 @@
     }
 
     // Function to explain the rules
+    function rules(){
+        alert(`
+            Game Rules
+
+            * A random number is generated at the start of the round.
+            * Your goal is to guess this number.
+            * You have *8 attempts* in total.
+            * Every wrong guess is added to the list of previous guesses.
+            * If you guess the correct number, the game ends immediately.
+            * If you reach all 8 attempts without guessing it, you get *Game Over*.
+            * After the game ends, you can restart and try again.
+            
+            Enjoy!
+        `);
+    }
+
+    // Apply saved theme at page load
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+    }
+
+    // Toggle between dark and light mode
+    function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+            localStorage.setItem("theme", "dark");
+        } else {
+            localStorage.setItem("theme", "light");
+        }
+    }
+
 
     function reloadPage(){
         window.location.reload(true);
