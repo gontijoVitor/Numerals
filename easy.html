@@ -64,6 +64,7 @@
             <button type="submit" id="submit" onclick="processInput()"><i class="fa-solid fa-share"></i> <span>Submit answer</span></button>
         </div>
         <div id="output"></div>
+        <div id="guessed_numbers"></div>
             <button onclick="reloadPage()"><i class="fa-solid fa-arrow-rotate-right"></i> <span>Try another guess</span></button>
     </div>
 </body>
@@ -75,20 +76,32 @@
 
     // Creating a random number
     const randomNumber = getRandomInt(99999);
-    
+
+    // Array that storages the guessed numbers
+    const guessed_numbers = [];
+
     // Processing the user answer
     function processInput() {
-      const userInput = document.getElementById('userInputField').value; // User input
+        const userInput = document.getElementById('userInputField').value; // User input
 
-      if (userInput == randomNumber){
-        document.getElementById('output').innerHTML = `Congrats, you guessed the right number: ${userInput}`;
-        var button = document.getElementById('submit');
-        submit.disabled = true;
-      }
-      else{
-        document.getElementById('output').innerHTML = `Wrong guess, try again!`;
-      }
+        if (userInput === "") return;
+
+        if (userInput == randomNumber){
+            document.getElementById('output').innerHTML = `Congrats, you guessed the right number: ${userInput}`;
+            
+            // Disable submit button if user type the correct number
+            document.getElementById('submit').disable == true;    
+        }
+
+        else{
+            guessed_numbers.push(userInput); // store guesses
+
+            document.getElementById('output').innerHTML = `Wrong guess, try again!`;
+            document.getElementById('guessed_numbers').innerHTML = `Guessed numbers: ${guessed_numbers}`;
+        }
     }
+
+    // Function to explain the rules
 
     function reloadPage(){
         window.location.reload(true);
