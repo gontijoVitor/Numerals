@@ -87,13 +87,13 @@
 <body>
     <div class="main">
         <h1 style="margin-bottom: 0;">Numerals</h1>
+        
         <nav>
             <a href="easy.html">Easy</a> | <!-- disable this button -->
             <a href="medium.html">Medium</a> |
             <a href="difficult.html">Hard</a> |
             <a href="impossible.html">Impossible</a>
         </nav>
-        
         
         <div>
         </div>
@@ -102,7 +102,7 @@
         <div>
             <button onclick="toggleTheme()" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
             <button onclick="rules()"><i class="fa-solid fa-file-lines"></i> <span>How to play</span></button>
-            <button type="submit" id="submit" onclick="processInput()"><i class="fa-solid fa-share"></i> <span>Submit answer</span></button>
+            <button type="submit" id="submitguess" onclick="processInput()"><i class="fa-solid fa-share"></i> <span>Submit answer</span></button>
             <button onclick="reloadPage()"><i class="fa-solid fa-arrow-rotate-right"></i> <span>Try another guess</span></button>
         </div>
         <div id="guessed_numbers"></div>
@@ -133,31 +133,36 @@
             document.getElementById('output').innerHTML = `Congrats, you guessed the right number: ${userInput}`;
             
             // Disable submit button if user type the correct number
-            document.getElementById('submit').disabled = true;    
+            document.getElementById('submitguess').disabled = true;    
         }
 
         else{
-            guessed_numbers.push(userInput); // store guesses
-
-            document.getElementById('output').innerHTML = `Wrong guess, try again!`;
-            document.getElementById('guessed_numbers').innerHTML = `Guessed numbers: ${guessed_numbers}`;
+            if (guessed_numbers.includes(userInput)){
+                alert("You already guessed this number")
+            }
+            else{
+                guessed_numbers.push(userInput); // store guesses
+                
+                document.getElementById('output').innerHTML = `Wrong guess, try again!`;
+                document.getElementById('guessed_numbers').innerHTML = `Guessed numbers: ${guessed_numbers}`;
+            }
         }
     }
 
     // Function to explain the rules
     function rules(){
         alert(`
-            Game Rules
+Game Rules
 
-            * A random number is generated at the start of the round.
-            * Your goal is to guess this number.
-            * You have *8 attempts* in total.
-            * Every wrong guess is added to the list of previous guesses.
-            * If you guess the correct number, the game ends immediately.
-            * If you reach all 8 attempts without guessing it, you get *Game Over*.
-            * After the game ends, you can restart and try again.
-            
-            Enjoy!
+* A random number is generated at the start of the round.
+* Your goal is to guess this number.
+* You have *8 attempts* in total.
+* Every wrong guess is added to the list of previous guesses.
+* If you guess the correct number, the game ends immediately.
+* If you reach all 8 attempts without guessing it, you get *Game Over*.
+* After the game ends, you can restart and try again.
+
+Enjoy!
         `);
     }
 
