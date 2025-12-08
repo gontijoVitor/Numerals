@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Numerals</title>
+    <!-- Fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- CSS import -->
     <link rel="stylesheet" href="style.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.png">
 </head>
 <body>
     <div class="main">
@@ -17,21 +21,36 @@
             <a href="difficult.html">Hard</a> |
             <a href="impossible.html">Impossible</a>
         </nav>
-        
-        <div>
-        </div>
-        
-        <input type="text" placeholder="Give it a try!" maxlength="5" id="userInputField">
-        <div>
-            <button onclick="toggleTheme()" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
-            <button onclick="rules()"><i class="fa-solid fa-file-lines"></i> <span>How to play</span></button>
-            <button type="submit" id="submitguess" onclick="processInput()"><i class="fa-solid fa-share"></i> <span>Submit answer</span></button>
-            <button onclick="reloadPage()"><i class="fa-solid fa-arrow-rotate-right"></i> <span>Try another guess</span></button>
-        </div>
+                
+        <form class="" onsubmit="processInput(); return false;">
+            <input type="text" placeholder="Give it a try!" maxlength="5" id="userInputField">
+            <div>
+                <button type="button" onclick="toggleTheme()" id="themeToggle">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
+                <button type="button" onclick="rules()">
+                    <i class="fa-solid fa-file-lines"></i> 
+                    <span>How to play</span>
+                </button>
+
+                <button type="submit" id="submitguess">
+                    <i class="fa-solid fa-share"></i> 
+                    <span>Submit answer</span>
+                </button>
+
+                <button type="button" onclick="reloadPage()">
+                    <i class="fa-solid fa-arrow-rotate-right"></i> 
+                    <span>Try another guess</span>
+                </button>
+            </div>
+        </form>
+
         <div id="guessed_numbers"></div>
         <div id="output"></div>
     </div>
 </body>
+
 <script>
     // Create random rumber
     function getRandomInt() {
