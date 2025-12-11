@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numerals</title>
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- CSS import -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+</head>
+<body>
+    <div class="main">
+        <h1 style="margin-bottom: 0;">Numerals</h1>
+        
+        <nav>
+            <a href="easy.html">Easy</a> | <!-- disable this button -->
+            <a href="medium.html">Medium</a> |
+            <a href="difficult.html">Hard</a> |
+            <a href="impossible.html">Impossible</a>
+        </nav>
+                
+        <form class="" onsubmit="processInput(); return false;">
+            <input type="text" placeholder="Give it a try!" maxlength="5" id="userInputField">
+            <div>
+                <button type="button" onclick="toggleTheme()" id="themeToggle">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
+                <button type="button" onclick="rules()">
+                    <i class="fa-solid fa-file-lines"></i> 
+                    <span>How to play</span>
+                </button>
+
+                <button type="submit" id="submitguess">
+                    <i class="fa-solid fa-share"></i> 
+                    <span>Submit answer</span>
+                </button>
+
+                <button type="button" onclick="reloadPage()">
+                    <i class="fa-solid fa-arrow-rotate-right"></i> 
+                    <span>Try another guess</span>
+                </button>
+            </div>
+        </form>
+
+        <div id="guessed_numbers"></div>
+        <div id="output"></div>
+    </div>
+</body>
+
+<script>
+    // Create random rumber
+    function getRandomInt() {
+        const min = 10000;
+        const max = 99999;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Creating a random number
+    const randomNumber = getRandomInt();
+
+    // Array that storages the guessed numbers
+    const guessed_numbers = [];
+
+    // Processing the user answer
+    function processInput() {
+        const userInput = document.getElementById('userInputField').value; // User input
+
+        if (userInput === "") return;
+
+        if (userInput == randomNumber){
+            document.getElementById('output').innerHTML = `Congrats, you guessed the right number: ${userInput}`;
+            
+            // Disable submit button if user type the correct number
+            document.getElementById('submitguess').disabled = true;    
+        }
+
+        else{
+            if (guessed_numbers.includes(userInput)){
+                alert("You already guessed this number")
+            }
+            else{
+                guessed_numbers.push(userInput); // store guesses
+                
+                document.getElementById('output').innerHTML = `Wrong guess, try again!`;
+                document.getElementById('guessed_numbers').innerHTML = `Guessed numbers: ${guessed_numbers}`;
+            }
+        }
+    }
+
+    // Function to explain the rules
+    function rules(){
+        alert(`
+Game Rules
+
+* A random number is generated at the start of the round.
+* Your goal is to guess this number.
+* You have *8 attempts* in total.
+* Every wrong guess is added to the list of previous guesses.
+* If you guess the correct number, the game ends immediately.
+* If you reach all 8 attempts without guessing it, you get *Game Over*.
+* After the game ends, you can restart and try again.
+
+Enjoy!
+        `);
+    }
+
+    // Apply saved theme at page load
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+    }
+
+    // Toggle between dark and light mode
+    function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+            localStorage.setItem("theme", "dark");
+        } else {
+            localStorage.setItem("theme", "light");
+        }
+    }
+
+
+    function reloadPage(){
+        window.location.reload(true);
+    }
+
+    // I have to remove this alert later, cuz is just for testing
+    alert(randomNumber);
+</script>
+</html>
