@@ -21,7 +21,18 @@
             <a href="difficult.html">Hard</a> |
             <a href="impossible.html">Impossible</a>
         </nav>
-                
+
+        <!-- The rows will appear after each guess, with a limit of 6 guesses -->
+        <div class="board">
+            <div class="row">
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+            </div>
+        </div>
+        <p style="margin: 0;">Remaining guesses = </p>
         <form class="" onsubmit="processInput(); return false;">
             <input type="text" placeholder="Give it a try!" maxlength="5" id="userInputField">
             <div>

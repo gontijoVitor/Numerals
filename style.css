@@ -90,3 +90,24 @@ button:hover{
     color: #fff;
     border: 1px solid #444;
 }
+
+.board {
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+.cell {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #ccc;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  line-height: 60px;
+  text-transform: uppercase;
+}
