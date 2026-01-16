@@ -1,2 +1,2 @@
 # Numerals
-This is a project I still want to develop — it's a game like Wordle or Termo, where you have to guess a word, receiving hints with each attempt. I want to do the same idea but with numbers from 1 to 9, to help me practice my skills with arrays.
+This is a project I'm still developing, it's a game like Wordle or Termo, where you have to guess a word, receiving hints with each attempt. I want to do the same idea but with numbers from 1 to 9, to help me practice my skills with arrays.
