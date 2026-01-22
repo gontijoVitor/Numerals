@@ -1,4 +1,3 @@
-````md
 # 🔢 Numerals
 
 **Numerals** is a minimalist number-guessing game inspired by **Wordle**, developed for **educational purposes** using **HTML, CSS, and Vanilla JavaScript**.
@@ -189,5 +188,3 @@ Este projeto foi desenvolvido para reforçar:
 Free for learning, experimentation, and educational use.
 
 Livre para estudo, experimentação e uso educacional.
-
-````
