@@ -189,3 +189,5 @@ Este projeto foi desenvolvido para reforçar:
 Free for learning, experimentation, and educational use.
 
 Livre para estudo, experimentação e uso educacional.
+
+````
