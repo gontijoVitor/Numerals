@@ -4,132 +4,192 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Numerals</title>
+
     <!-- Fontawesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- CSS import -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="../../img/favicon.png">
 </head>
 <body>
-    <div class="main">
-        <h1 style="margin-bottom: 0;">Numerals</h1>
-        
-        <nav>
-            <a href="easy.html">Easy</a> | <!-- disable this button -->
-            <a href="medium.html">Medium</a> |
-            <a href="difficult.html">Hard</a> |
-            <a href="impossible.html">Impossible</a>
-        </nav>
-                
-        <form class="" onsubmit="processInput(); return false;">
-            <input type="text" placeholder="Give it a try!" maxlength="5" id="userInputField">
-            <div>
-                <button type="button" onclick="toggleTheme()" id="themeToggle">
-                    <i class="fa-solid fa-moon"></i>
-                </button>
 
-                <button type="button" onclick="rules()">
-                    <i class="fa-solid fa-file-lines"></i> 
-                    <span>How to play</span>
-                </button>
+<div class="main">
+    <h1>Numerals</h1>
 
-                <button type="submit" id="submitguess">
-                    <i class="fa-solid fa-share"></i> 
-                    <span>Submit answer</span>
-                </button>
+    <nav>
+        <a href="easy.html">Easy</a> |
+        <a class="active">Medium</a> |
+        <a href="hard.html">Hard</a>
+    </nav>
 
-                <button type="button" onclick="reloadPage()">
-                    <i class="fa-solid fa-arrow-rotate-right"></i> 
-                    <span>Try another guess</span>
-                </button>
-            </div>
-        </form>
-
-        <div id="guessed_numbers"></div>
-        <div id="output"></div>
+    <div class="board">
+        <div class="row">
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        </div>
+        <div class="row">
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        </div>
+        <div class="row">
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        </div>
+        <div class="row">
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        </div>
+        <div class="row">
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        </div>
     </div>
-</body>
+
+    <form onsubmit="processInput(); return false;">
+        <input type="text" id="userInputField" maxlength="5" placeholder="Give it a try!">
+
+        <div>
+            <button type="button" onclick="toggleTheme()">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <button type="button" onclick="rules()">
+                <i class="fa-solid fa-file-lines"></i> How to play
+            </button>
+            <button type="submit" id="submitguess">
+                <i class="fa-solid fa-share"></i> Submit
+            </button>
+        </div>
+    </form>
+
+    <div id="output"></div>
+</div>
 
 <script>
-    // Create random rumber
-    function getRandomInt() {
-        const min = 10000;
-        const max = 99999;
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+
+function rules() {
+    alert(
+        "GAME RULES\n\n" +
+        "• A random number is generated at the start of the round.\n" +
+        "• Your goal is to guess this number.\n" +
+        "• You have 5 attempts in total.\n\n" +
+        "FEEDBACK\n" +
+        "• Each wrong guess is recorded.\n" +
+        "• The game gives hints after every guess.\n\n" +
+        "END CONDITIONS\n" +
+        "• Guess the number correctly to win immediately.\n" +
+        "• Use all 5 attempts without success to lose.\n\n" +
+        "You can restart the game after it ends.\n\n" +
+        "Good luck!"
+    );
+}
+
+
+/* =========================
+   GAME STATE (MEDIUM)
+========================= */
+const maxAttempts = 5;
+let currentAttempt = 0;
+let gameOver = false;
+
+const rows = document.querySelectorAll(".row");
+const output = document.getElementById("output");
+
+/* =========================
+   RANDOM NUMBER
+========================= */
+function getRandomInt() {
+    return Math.floor(Math.random() * 90000) + 10000;
+}
+
+const randomNumber = getRandomInt().toString();
+
+/* =========================
+   WORDLE LOGIC (IGUAL AO EASY)
+========================= */
+function evaluateGuess(guess, secret) {
+    const result = Array(5).fill(null);
+    const used = Array(5).fill(false);
+
+    // Green pass
+    for (let i = 0; i < 5; i++) {
+        if (guess[i] === secret[i]) {
+            result[i] = "correct";
+            used[i] = true;
+        }
     }
 
-    // Creating a random number
-    const randomNumber = getRandomInt();
+    // Yellow pass
+    for (let i = 0; i < 5; i++) {
+        if (result[i]) continue;
 
-    // Array that storages the guessed numbers
-    const guessed_numbers = [];
-
-    // Processing the user answer
-    function processInput() {
-        const userInput = document.getElementById('userInputField').value; // User input
-
-        if (userInput === "") return;
-
-        if (userInput == randomNumber){
-            document.getElementById('output').innerHTML = `Congrats, you guessed the right number: ${userInput}`;
-            
-            // Disable submit button if user type the correct number
-            document.getElementById('submitguess').disabled = true;    
-        }
-
-        else{
-            if (guessed_numbers.includes(userInput)){
-                alert("You already guessed this number")
+        for (let j = 0; j < 5; j++) {
+            if (!used[j] && guess[i] === secret[j]) {
+                result[i] = "present";
+                used[j] = true;
+                break;
             }
-            else{
-                guessed_numbers.push(userInput); // store guesses
-                
-                document.getElementById('output').innerHTML = `Wrong guess, try again!`;
-                document.getElementById('guessed_numbers').innerHTML = `Guessed numbers: ${guessed_numbers}`;
-            }
         }
     }
 
-    // Function to explain the rules
-    function rules(){
-        alert(`
-Game Rules
+    return result;
+}
 
-* A random number is generated at the start of the round.
-* Your goal is to guess this number.
-* You have *8 attempts* in total.
-* Every wrong guess is added to the list of previous guesses.
-* If you guess the correct number, the game ends immediately.
-* If you reach all 8 attempts without guessing it, you get *Game Over*.
-* After the game ends, you can restart and try again.
+/* =========================
+   INPUT HANDLER
+========================= */
+function processInput() {
+    if (gameOver) return;
 
-Enjoy!
-        `);
+    const input = document.getElementById("userInputField");
+    const value = input.value.trim();
+
+    if (!/^\d{5}$/.test(value)) {
+        output.textContent = "Enter exactly 5 digits.";
+        return;
     }
 
-    // Apply saved theme at page load
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-    }
+    const guess = value.split("");
+    const secret = randomNumber.split("");
+    const evaluation = evaluateGuess(guess, secret);
 
-    // Toggle between dark and light mode
-    function toggleTheme() {
-        document.body.classList.toggle("dark-mode");
+    const cells = rows[currentAttempt].querySelectorAll(".cell");
 
-        if (document.body.classList.contains("dark-mode")) {
-            localStorage.setItem("theme", "dark");
-        } else {
-            localStorage.setItem("theme", "light");
+    for (let i = 0; i < 5; i++) {
+        cells[i].textContent = guess[i];
+        if (evaluation[i]) {
+            cells[i].classList.add(evaluation[i]);
         }
     }
 
+    currentAttempt++;
+    input.value = "";
 
-    function reloadPage(){
-        window.location.reload(true);
+    if (value === randomNumber) {
+        output.textContent = "🎉 Congratulations! You won!";
+        gameOver = true;
+        return;
     }
 
-    // I have to remove this alert later, cuz is just for testing
-    alert(randomNumber);
+    if (currentAttempt === maxAttempts) {
+        output.textContent = `❌ Game Over! The number was ${randomNumber}`;
+        gameOver = true;
+    }
+}
+
+/* =========================
+   DARK MODE
+========================= */
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark-mode") ? "dark" : "light"
+    );
+}
 </script>
+
+</body>
 </html>
