@@ -6,10 +6,10 @@
     <title>Numerals</title>
 
     <!-- Fontawesome -->
-    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 
     <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="../../img/favicon.png">
@@ -18,15 +18,14 @@
 
 <div class="main">
     <h1>Numerals</h1>
+
     <nav>
-        <a class="active">Easy</a> |
-        <a href="medium.html">Medium</a> |
+        <a href="index.html">Easy</a> |
+        <a class="active">Medium</a> |
         <a href="hard.html">Hard</a>
     </nav>
+
     <div class="board">
-        <div class="row">
-            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        </div>
         <div class="row">
             <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
         </div>
@@ -70,28 +69,28 @@ function rules() {
         "GAME RULES\n\n" +
         "• A random number is generated at the start of the round.\n" +
         "• Your goal is to guess this number.\n" +
-        "• You have 6 attempts in total.\n\n" +
+        "• You have 5 attempts in total.\n\n" +
         "FEEDBACK\n" +
         "• Each wrong guess is recorded.\n" +
         "• The game gives hints after every guess.\n\n" +
         "END CONDITIONS\n" +
         "• Guess the number correctly to win immediately.\n" +
-        "• Use all 6 attempts without success to lose.\n\n" +
+        "• Use all 5 attempts without success to lose.\n\n" +
         "You can restart the game after it ends.\n\n" +
         "Good luck!"
     );
 }
 
+
 /* =========================
-   GAME STATE
+   GAME STATE (MEDIUM)
 ========================= */
-const maxAttempts = 6;
+const maxAttempts = 5;
 let currentAttempt = 0;
 let gameOver = false;
 
 const rows = document.querySelectorAll(".row");
 const output = document.getElementById("output");
-const remaining = document.getElementById("remaining");
 
 /* =========================
    RANDOM NUMBER
@@ -103,7 +102,7 @@ function getRandomInt() {
 const randomNumber = getRandomInt().toString();
 
 /* =========================
-   WORDLE LOGIC
+   WORDLE LOGIC (IGUAL AO EASY)
 ========================= */
 function evaluateGuess(guess, secret) {
     const result = Array(5).fill(null);
@@ -161,7 +160,6 @@ function processInput() {
     }
 
     currentAttempt++;
-    remaining.textContent = `Remaining guesses: ${maxAttempts - currentAttempt}`;
     input.value = "";
 
     if (value === randomNumber) {
