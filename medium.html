@@ -64,6 +64,38 @@
 
 <script>
 /* =========================
+   SHOW RULES
+========================= */
+function rules() {
+    alert(
+    `
+    [EN]
+    NUMERALS RULES
+
+    • Guess the daily 5-digit number
+    • Limited attempts by difficulty
+    • Same number for all players
+    • Changes every day at 00:00
+
+    🟩 Correct
+    🟨 Present
+    ⬜ Absent
+    
+    
+    [PT-BR]
+    • Descubra o número diário de 5 dígitos.
+    • As tentativas variam conforme a dificuldade.
+    • Todos os jogadores recebem o mesmo número.
+    • O número muda diariamente à meia-noite.
+
+    🟩 Correto
+    🟨 Presente
+    ⬜ Não existe
+    `
+    );
+}
+
+/* =========================
    DAILY SEED SYSTEM
 ========================= */
 const START_DATE = new Date("2024-01-01");
