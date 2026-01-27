@@ -12,12 +12,12 @@
     <link rel="stylesheet" href="./css/style.css">
 
     <!-- favicon -->
-    <link rel="icon" type="image/x-icon" href="../../img/favicon.png">
+    <link rel="icon" type="image/x-icon" href="./img/favicon.png">
 </head>
 <body>
 
 <div class="main">
-    <h1>Numerals</h1>
+    <h1>Numerals - Medium</h1>
 
     <nav>
         <a href="index.html">Easy</a> |
@@ -63,24 +63,25 @@
 </div>
 
 <script>
+/* =========================
+   DAILY SEED SYSTEM
+========================= */
+const START_DATE = new Date("2024-01-01");
 
-function rules() {
-    alert(
-        "GAME RULES\n\n" +
-        "• A random number is generated at the start of the round.\n" +
-        "• Your goal is to guess this number.\n" +
-        "• You have 5 attempts in total.\n\n" +
-        "FEEDBACK\n" +
-        "• Each wrong guess is recorded.\n" +
-        "• The game gives hints after every guess.\n\n" +
-        "END CONDITIONS\n" +
-        "• Guess the number correctly to win immediately.\n" +
-        "• Use all 5 attempts without success to lose.\n\n" +
-        "You can restart the game after it ends.\n\n" +
-        "Good luck!"
-    );
+function daysSinceStart() {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    return Math.floor((today - START_DATE) / (1000 * 60 * 60 * 24));
 }
 
+function getDailyNumber() {
+    const dayIndex = daysSinceStart();
+    const seed = dayIndex * 9301 + 49297;
+    return ((seed % 90000) + 10000).toString();
+}
+
+const todayKey = "medium-" + new Date().toISOString().slice(0, 10);
+const randomNumber = getDailyNumber();
 
 /* =========================
    GAME STATE (MEDIUM)
@@ -91,18 +92,30 @@ let gameOver = false;
 
 const rows = document.querySelectorAll(".row");
 const output = document.getElementById("output");
+const input = document.getElementById("userInputField");
 
 /* =========================
-   RANDOM NUMBER
+   RESTORE DAILY STATE
 ========================= */
-function getRandomInt() {
-    return Math.floor(Math.random() * 90000) + 10000;
+const savedGame = JSON.parse(localStorage.getItem(todayKey));
+
+if (savedGame) {
+    currentAttempt = savedGame.currentAttempt;
+    gameOver = savedGame.gameOver;
+
+    savedGame.board.forEach((row, r) => {
+        const cells = rows[r].querySelectorAll(".cell");
+        row.forEach((cell, c) => {
+            cells[c].textContent = cell.value;
+            if (cell.state) cells[c].classList.add(cell.state);
+        });
+    });
+
+    if (gameOver) showCountdown();
 }
 
-const randomNumber = getRandomInt().toString();
-
 /* =========================
-   WORDLE LOGIC (IGUAL AO EASY)
+   WORDLE LOGIC
 ========================= */
 function evaluateGuess(guess, secret) {
     const result = Array(5).fill(null);
@@ -119,7 +132,6 @@ function evaluateGuess(guess, secret) {
     // Yellow pass
     for (let i = 0; i < 5; i++) {
         if (result[i]) continue;
-
         for (let j = 0; j < 5; j++) {
             if (!used[j] && guess[i] === secret[j]) {
                 result[i] = "present";
@@ -138,7 +150,6 @@ function evaluateGuess(guess, secret) {
 function processInput() {
     if (gameOver) return;
 
-    const input = document.getElementById("userInputField");
     const value = input.value.trim();
 
     if (!/^\d{5}$/.test(value)) {
@@ -154,24 +165,73 @@ function processInput() {
 
     for (let i = 0; i < 5; i++) {
         cells[i].textContent = guess[i];
-        if (evaluation[i]) {
-            cells[i].classList.add(evaluation[i]);
-        }
+        cells[i].classList.add(evaluation[i]);
     }
 
     currentAttempt++;
     input.value = "";
 
+    saveGameState();
+
     if (value === randomNumber) {
-        output.textContent = "🎉 Congratulations! You won!";
+        output.textContent = "🎉 You solved today’s Medium challenge!";
         gameOver = true;
+        endGame();
         return;
     }
 
     if (currentAttempt === maxAttempts) {
         output.textContent = `❌ Game Over! The number was ${randomNumber}`;
         gameOver = true;
+        endGame();
     }
+}
+
+/* =========================
+   SAVE STATE
+========================= */
+function saveGameState() {
+    const board = Array.from(rows).map(row =>
+        Array.from(row.querySelectorAll(".cell")).map(cell => ({
+            value: cell.textContent,
+            state: [...cell.classList].find(c =>
+                c === "correct" || c === "present"
+            )
+        }))
+    );
+
+    localStorage.setItem(todayKey, JSON.stringify({
+        currentAttempt,
+        gameOver,
+        board
+    }));
+}
+
+/* =========================
+   COUNTDOWN TIMER
+========================= */
+function endGame() {
+    saveGameState();
+    showCountdown();
+}
+
+function showCountdown() {
+    const timer = document.createElement("div");
+    timer.id = "countdown";
+    output.appendChild(timer);
+
+    setInterval(() => {
+        const now = new Date();
+        const tomorrow = new Date();
+        tomorrow.setHours(24,0,0,0);
+
+        const diff = tomorrow - now;
+        const h = String(Math.floor(diff / 3600000)).padStart(2, "0");
+        const m = String(Math.floor(diff % 3600000 / 60000)).padStart(2, "0");
+        const s = String(Math.floor(diff % 60000 / 1000)).padStart(2, "0");
+
+        timer.textContent = `Next Medium number in ${h}:${m}:${s}`;
+    }, 1000);
 }
 
 /* =========================
