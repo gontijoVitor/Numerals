@@ -64,37 +64,42 @@
 </div>
 
 <script>
+/* =========================
+   CONFIG
+========================= */
+const DIFFICULTY = "hard";
+const DIGITS = 5;
+const maxAttempts = 4;
 
 /* =========================
    SHOW RULES
 ========================= */
 function rules() {
-    alert(
-    `
-    [EN]
-    NUMERALS RULES
+    alert(`
+[EN]
+NUMERALS RULES
 
-    • Guess the daily 5-digit number
-    • Limited attempts by difficulty
-    • Same number for all players
-    • Changes every day at 00:00
+• Guess the daily ${DIGITS}-digit number
+• Limited attempts by difficulty
+• Same number for all players (per difficulty)
+• Changes every day at 00:00
 
-    🟩 Correct
-    🟨 Present
-    ⬜ Absent
-    
-    
-    [PT-BR]
-    • Descubra o número diário de 5 dígitos.
-    • As tentativas variam conforme a dificuldade.
-    • Todos os jogadores recebem o mesmo número.
-    • O número muda diariamente à meia-noite.
+🟩 Correct
+🟨 Present
+⬜ Absent
 
-    🟩 Correto
-    🟨 Presente
-    ⬜ Não existe
-    `
-    );
+────────────────────────
+
+[PT-BR]
+• Descubra o número diário de ${DIGITS} dígitos
+• Tentativas variam conforme a dificuldade
+• Mesmo número para todos (por dificuldade)
+• O número muda diariamente à meia-noite
+
+🟩 Correto
+🟨 Presente
+⬜ Não existe
+`);
 }
 
 /* =========================
@@ -104,23 +109,38 @@ const START_DATE = new Date("2024-01-01");
 
 function daysSinceStart() {
     const today = new Date();
-    today.setHours(0,0,0,0);
-    return Math.floor((today - START_DATE) / (1000 * 60 * 60 * 24));
+    today.setHours(0, 0, 0, 0);
+    return Math.floor((today - START_DATE) / 86400000);
+}
+
+function seededRandom(seed) {
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+        hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return function () {
+        hash = (hash * 9301 + 49297) % 233280;
+        return hash / 233280;
+    };
 }
 
 function getDailyNumber() {
-    const dayIndex = daysSinceStart();
-    const seed = dayIndex * 9301 + 49297;
-    return ((seed % 90000) + 10000).toString();
+    const day = daysSinceStart();
+    const seed = `${day}-${DIFFICULTY}`;
+    const rand = seededRandom(seed);
+
+    const min = Math.pow(10, DIGITS - 1);
+    const max = Math.pow(10, DIGITS) - 1;
+
+    return Math.floor(rand() * (max - min + 1) + min).toString();
 }
 
-const todayKey = "hard-" + new Date().toISOString().slice(0, 10);
+const todayKey = `${new Date().toISOString().slice(0,10)}-${DIFFICULTY}`;
 const randomNumber = getDailyNumber();
 
 /* =========================
-   GAME STATE (HARD)
+   GAME STATE
 ========================= */
-const maxAttempts = 4;
 let currentAttempt = 0;
 let gameOver = false;
 
@@ -152,19 +172,21 @@ if (savedGame) {
    WORDLE LOGIC
 ========================= */
 function evaluateGuess(guess, secret) {
-    const result = Array(5).fill(null);
-    const used = Array(5).fill(false);
+    const result = Array(DIGITS).fill(null);
+    const used = Array(DIGITS).fill(false);
 
-    for (let i = 0; i < 5; i++) {
+    // Green
+    for (let i = 0; i < DIGITS; i++) {
         if (guess[i] === secret[i]) {
             result[i] = "correct";
             used[i] = true;
         }
     }
 
-    for (let i = 0; i < 5; i++) {
+    // Yellow
+    for (let i = 0; i < DIGITS; i++) {
         if (result[i]) continue;
-        for (let j = 0; j < 5; j++) {
+        for (let j = 0; j < DIGITS; j++) {
             if (!used[j] && guess[i] === secret[j]) {
                 result[i] = "present";
                 used[j] = true;
@@ -184,20 +206,19 @@ function processInput() {
 
     const value = input.value.trim();
 
-    if (!/^\d{5}$/.test(value)) {
-        output.textContent = "Enter exactly 5 digits.";
+    if (!new RegExp(`^\\d{${DIGITS}}$`).test(value)) {
+        output.textContent = `Enter exactly ${DIGITS} digits.`;
         return;
     }
 
     const guess = value.split("");
     const secret = randomNumber.split("");
     const evaluation = evaluateGuess(guess, secret);
-
     const cells = rows[currentAttempt].querySelectorAll(".cell");
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < DIGITS; i++) {
         cells[i].textContent = guess[i];
-        cells[i].classList.add(evaluation[i]);
+        if (evaluation[i]) cells[i].classList.add(evaluation[i]);
     }
 
     currentAttempt++;
@@ -206,7 +227,7 @@ function processInput() {
     saveGameState();
 
     if (value === randomNumber) {
-        output.textContent = "🔥 You solved today’s Hard challenge!";
+        output.textContent = "🎉 You solved today’s challenge!";
         gameOver = true;
         endGame();
         return;
@@ -226,9 +247,7 @@ function saveGameState() {
     const board = Array.from(rows).map(row =>
         Array.from(row.querySelectorAll(".cell")).map(cell => ({
             value: cell.textContent,
-            state: [...cell.classList].find(c =>
-                c === "correct" || c === "present"
-            )
+            state: [...cell.classList].find(c => c === "correct" || c === "present")
         }))
     );
 
@@ -248,21 +267,24 @@ function endGame() {
 }
 
 function showCountdown() {
-    const timer = document.createElement("div");
-    timer.id = "countdown";
-    output.appendChild(timer);
+    let timer = document.getElementById("countdown");
+    if (!timer) {
+        timer = document.createElement("div");
+        timer.id = "countdown";
+        output.appendChild(timer);
+    }
 
     setInterval(() => {
         const now = new Date();
         const tomorrow = new Date();
-        tomorrow.setHours(24,0,0,0);
+        tomorrow.setHours(24, 0, 0, 0);
 
         const diff = tomorrow - now;
         const h = String(Math.floor(diff / 3600000)).padStart(2, "0");
         const m = String(Math.floor(diff % 3600000 / 60000)).padStart(2, "0");
         const s = String(Math.floor(diff % 60000 / 1000)).padStart(2, "0");
 
-        timer.textContent = `Next Hard number in ${h}:${m}:${s}`;
+        timer.textContent = `Next number in ${h}:${m}:${s}`;
     }, 1000);
 }
 
